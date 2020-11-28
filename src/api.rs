@@ -14,7 +14,7 @@ impl Api {
     Api { provider }
   }
 
-  pub async fn quote(&self, ticker: &str, interval: &str) -> Result<Quote, ApiError> {
+  pub async fn quote_range(&self, ticker: &str, interval: &str) -> Result<Quote, ApiError> {
     let response = self.provider.get_latest_quotes(ticker, interval).await?;
     let quote = response.last_quote()?;
     let time: DateTime<Utc> = DateTime::from(UNIX_EPOCH + Duration::from_secs(quote.timestamp));
@@ -25,3 +25,11 @@ impl Api {
     })
   }
 }
+
+// pub enum Interval {
+//   Minute(u8),
+//   Hour(u8),
+//   Day(u8),
+//   Month(u8),
+//   Year(u8),
+// }
