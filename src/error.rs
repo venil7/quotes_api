@@ -6,15 +6,15 @@ use yahoo_finance_api as yahoo;
 #[derive(Debug)]
 pub struct ApiError {}
 
-impl ApiError {
-  pub fn new() -> ApiError {
+impl Default for ApiError {
+  fn default() -> Self {
     ApiError {}
   }
 }
 
 impl Display for ApiError {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-    write!(f, "({})", "error")
+    write!(f, "(erro)")
   }
 }
 
@@ -22,7 +22,18 @@ impl Error for ApiError {}
 
 impl From<yahoo::YahooError> for ApiError {
   fn from(_ye: yahoo::YahooError) -> ApiError {
-    ApiError::new()
+    ApiError::default()
+  }
+}
+
+impl From<regex::Error> for ApiError {
+  fn from(_re: regex::Error) -> ApiError {
+    ApiError::default()
+  }
+}
+impl From<std::num::ParseIntError> for ApiError {
+  fn from(_pe: std::num::ParseIntError) -> ApiError {
+    ApiError::default()
   }
 }
 

@@ -19,9 +19,9 @@ pub async fn bearer_validator(
   if let Some(auth_api) = req.app_data::<AuthApi>() {
     match auth_api.validate_token(credentials.token()) {
       true => Ok(req),
-      _ => Err(Error::from(ApiError::new())),
+      _ => Err(Error::from(ApiError::default())),
     }
   } else {
-    Err(Error::from(ApiError::new()))
+    Err(Error::from(ApiError::default()))
   }
 }

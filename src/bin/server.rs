@@ -17,12 +17,17 @@ async fn main() -> std::io::Result<()> {
   HttpServer::new(|| {
     let auth = HttpAuthentication::bearer(bearer_validator);
     App::new()
-      .app_data(AuthApi::new())
-      .data(Api::new())
+      .app_data(AuthApi::default())
+      .data(Api::default())
       .wrap(middleware::Logger::default())
       .wrap(auth)
       .service(
-        web::scope("/api/v1").route("/quote/{ticker}/{period}", web::get().to(handlers::quote)),
+        web::scope("/api/v1")
+          .route("/latest/{ticker}", web::get().to(handlers::latest))
+          .route(
+            "/quotes/{tickers}/{period}",
+            web::get().to(handlers::period),
+          ),
       )
   })
   .bind(bind_address)?

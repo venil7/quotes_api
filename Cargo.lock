@@ -1425,6 +1425,7 @@ dependencies = [
  "actix-web",
  "actix-web-httpauth",
  "chrono",
+ "regex",
  "serde",
  "serde_json",
  "structopt",
