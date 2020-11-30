@@ -1,6 +1,7 @@
 use crate::domain::Period;
 use crate::domain::Quote;
 use crate::error::ApiError;
+use log;
 use yahoo_finance_api as yahoo;
 
 pub struct Api {
@@ -18,14 +19,19 @@ impl Api {
   pub async fn quotes_for_range(
     &self,
     ticker: &str,
-    _period: Period,
+    period: Period,
   ) -> Result<Vec<Quote>, ApiError> {
+    let granularity = period.to_matching_yahoo_granularity()?;
+    let interval = period.to_yahoo_range()?;
+    log::info!(
+      "requesting Yahoo! for ticker:{}, interval:{}, granularity:{}",
+      &ticker,
+      &interval,
+      &granularity,
+    );
     let response = self
       .provider
-      .get_quote_range(
-        ticker, "1d",  /*period.to_interval()*/
-        "1mo", /*period.to_range()*/
-      )
+      .get_quote_range(&ticker, &granularity, &interval)
       .await?;
     let quotes = response
       .quotes()?

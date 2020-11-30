@@ -1,9 +1,12 @@
 use actix_web::{middleware, web, App, HttpServer};
+use log::LevelFilter;
 use quote_api::api::Api;
 use quote_api::auth::bearer_validator;
 use quote_api::auth_api::AuthApi;
 use quote_api::cli;
 use quote_api::handlers;
+use simple_logger::SimpleLogger;
+use std::str::FromStr;
 use structopt::StructOpt;
 
 use actix_web_httpauth::middleware::HttpAuthentication;
@@ -11,9 +14,16 @@ use actix_web_httpauth::middleware::HttpAuthentication;
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
   let cli = cli::Cli::from_args();
+
+  SimpleLogger::new()
+    .with_level(LevelFilter::from_str(&cli.log).unwrap())
+    .with_module_level("my_crate", LevelFilter::Info)
+    .init()
+    .unwrap();
+
   let bind_address = format!("{}:{}", cli.host, cli.port);
 
-  println!("Listening on {}", bind_address);
+  log::info!("Listening on {}", bind_address);
   HttpServer::new(|| {
     let auth = HttpAuthentication::bearer(bearer_validator);
     App::new()
