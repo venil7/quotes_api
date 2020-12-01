@@ -1,5 +1,5 @@
 use crate::api::Api;
-use crate::domain::Period;
+use crate::domain::period::Period;
 use std::collections::HashMap;
 use std::convert::TryFrom;
 

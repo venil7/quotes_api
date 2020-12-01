@@ -1,36 +1,6 @@
 use crate::error::ApiError;
-use chrono::prelude::*;
 use regex::Regex;
-use serde::{Deserialize, Serialize};
-
 use std::num::ParseIntError;
-use std::time::{Duration, UNIX_EPOCH};
-
-#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
-pub struct Quote {
-  pub timestamp: String,
-  pub open: f64,
-  pub high: f64,
-  pub low: f64,
-  pub volume: u64,
-  pub close: f64,
-  pub adjclose: f64,
-}
-
-impl From<yahoo_finance_api::Quote> for Quote {
-  fn from(q: yahoo_finance_api::Quote) -> Quote {
-    let timestamp: DateTime<Utc> = DateTime::from(UNIX_EPOCH + Duration::from_secs(q.timestamp));
-    Quote {
-      timestamp: timestamp.to_rfc3339(),
-      open: q.open,
-      high: q.high,
-      low: q.low,
-      volume: q.volume,
-      close: q.close,
-      adjclose: q.adjclose,
-    }
-  }
-}
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Period {
