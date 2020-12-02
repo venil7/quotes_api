@@ -1,6 +1,14 @@
+dist: xenial
+os: linux
+services:
+  - docker
 language: rust
 rust:
   - stable
 script:
   - cargo build --verbose --workspace
   - cargo test --verbose --workspace
+after_script:
+  - docker build -t quotes_api .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push darkruby/quotes_api
