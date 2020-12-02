@@ -1,18 +1,24 @@
 use crate::api::Api;
 use crate::domain::period::Period;
-use std::collections::HashMap;
 use std::convert::TryFrom;
 
 use actix_web::{web, HttpResponse, Result};
 
-pub async fn period(
+pub async fn ticker(
   api: web::Data<Api>,
   web::Path((tickers, period)): web::Path<(String, String)>,
 ) -> Result<HttpResponse> {
   let period = Period::try_from(period)?;
   let json = api.quotes_for_range(&tickers, period).await?;
-  let mut map = HashMap::new();
-  map.insert(tickers, json);
+  Ok(HttpResponse::Ok().json(json))
+}
+
+pub async fn tickers(
+  api: web::Data<Api>,
+  web::Path((tickers, period)): web::Path<(String, String)>,
+) -> Result<HttpResponse> {
+  let period = Period::try_from(period)?;
+  let map = api.multiple_quotes_for_range(&tickers, period).await?;
   Ok(HttpResponse::Ok().json(map))
 }
 

@@ -2,6 +2,7 @@ use crate::domain::period::Period;
 use crate::domain::quote::Quote;
 use crate::domain::quote::TickerQuotes;
 use crate::error::ApiError;
+use std::collections::HashMap;
 use yahoo_finance_api as yahoo;
 
 pub struct Api {
@@ -36,6 +37,22 @@ impl Api {
 
     Ok(response.into())
   }
+
+  pub async fn multiple_quotes_for_range(
+    &self,
+    tickers: &str,
+    period: Period,
+  ) -> Result<HashMap<String, TickerQuotes>, ApiError> {
+    let tickers = tickers.split(',').collect::<Vec<_>>();
+    let mut map = HashMap::new();
+    for ticker in tickers {
+      let ticker_quotes = self.quotes_for_range(ticker, period).await?;
+      map.insert(ticker.to_owned(), ticker_quotes);
+    }
+
+    return Ok(map);
+  }
+
   pub async fn latest(&self, ticker: &str) -> Result<Quote, ApiError> {
     let response = self.provider.get_latest_quotes(ticker, "1d").await?;
     let quote: Quote = response.last_quote()?.into();

@@ -3,7 +3,7 @@ name = "quote_api"
 version = "0.0.1"
 authors = ["@darkest_ruby"]
 edition = "2018"
-description = "web api for yahoo finance" 
+description = "HTTP API to fetch crypto/shares quotes (uses Y! finance)" 
 
 [dependencies]
 yahoo_finance_api = "1.0.2"

@@ -36,7 +36,7 @@ async fn main() -> std::io::Result<()> {
           .route("/latest/{ticker}", web::get().to(handlers::latest))
           .route(
             "/quotes/{tickers}/{period}",
-            web::get().to(handlers::period),
+            web::get().to(handlers::tickers),
           ),
       )
   })
