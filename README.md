@@ -1,3 +1,7 @@
+## Status
+
+![Rust](https://github.com/venil7/quotes_api/workflows/Rust/badge.svg)
+
 ## [API](./API.md)
 
 ## Todo
