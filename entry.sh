@@ -2,4 +2,4 @@
 server \
  --host $HOST \
  --port $PORT \
- --log  $LOG
+ --loglevel  $LOG

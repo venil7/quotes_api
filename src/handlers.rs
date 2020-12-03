@@ -21,11 +21,3 @@ pub async fn tickers(
   let map = api.multiple_quotes_for_range(&tickers, period).await?;
   Ok(HttpResponse::Ok().json(map))
 }
-
-pub async fn latest(
-  api: web::Data<Api>,
-  web::Path(tickers): web::Path<String>,
-) -> Result<HttpResponse> {
-  let json = api.latest(&tickers).await?;
-  Ok(HttpResponse::Ok().json(json))
-}

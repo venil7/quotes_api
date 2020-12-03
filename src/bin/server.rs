@@ -16,8 +16,7 @@ async fn main() -> std::io::Result<()> {
   let cli = cli::Cli::from_args();
 
   SimpleLogger::new()
-    .with_level(LevelFilter::from_str(&cli.log).unwrap())
-    .with_module_level("my_crate", LevelFilter::Info)
+    .with_level(LevelFilter::from_str(&cli.log_level).unwrap_or(LevelFilter::Info))
     .init()
     .unwrap();
 
@@ -31,14 +30,10 @@ async fn main() -> std::io::Result<()> {
       .data(Api::default())
       .wrap(middleware::Logger::default())
       .wrap(auth)
-      .service(
-        web::scope("/api/v1")
-          .route("/latest/{ticker}", web::get().to(handlers::latest))
-          .route(
-            "/quotes/{tickers}/{period}",
-            web::get().to(handlers::tickers),
-          ),
-      )
+      .service(web::scope("/api/v1").route(
+        "/quotes/{tickers}/{period}",
+        web::get().to(handlers::tickers),
+      ))
   })
   .bind(bind_address)?
   .run()
