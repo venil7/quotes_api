@@ -22,7 +22,12 @@ async fn main() -> std::io::Result<()> {
 
   let bind_address = format!("{}:{}", cli.host, cli.port);
 
-  log::info!("Listening on {}", bind_address);
+  log::info!(
+    "{} {} listening on {}",
+    env!("CARGO_PKG_NAME"),
+    env!("CARGO_PKG_VERSION"),
+    bind_address
+  );
   HttpServer::new(|| {
     let auth = HttpAuthentication::bearer(bearer_validator);
     App::new()
