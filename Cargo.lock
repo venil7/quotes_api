@@ -1431,11 +1431,12 @@ dependencies = [
 
 [[package]]
 name = "quote_api"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "actix-web",
  "actix-web-httpauth",
  "chrono",
+ "hostname",
  "log",
  "regex",
  "serde",

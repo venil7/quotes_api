@@ -35,10 +35,14 @@ async fn main() -> std::io::Result<()> {
       .data(Api::default())
       .wrap(middleware::Logger::default())
       .wrap(auth)
-      .service(web::scope("/api/v1").route(
-        "/quotes/{tickers}/{period}",
-        web::get().to(handlers::tickers),
-      ))
+      .service(
+        web::scope("/api/v1")
+          .route(
+            "/quotes/{tickers}/{period}",
+            web::get().to(handlers::tickers),
+          )
+          .route("/about", web::get().to(handlers::about)),
+      )
   })
   .bind(bind_address)?
   .run()
