@@ -1,6 +1,6 @@
 use crate::domain::period::Period;
-use crate::domain::quote::Quote;
 use crate::domain::quote::TickerQuotes;
+use crate::domain::ticker::Ticker;
 use crate::error::ApiError;
 use std::collections::HashMap;
 use yahoo_finance_api as yahoo;
@@ -54,13 +54,15 @@ impl Api {
     return Ok(map);
   }
 
-  pub async fn latest(&self, ticker: &str) -> Result<Quote, ApiError> {
-    let response = self
+  pub async fn search(&self, term: &str) -> Result<Vec<Ticker>, ApiError> {
+    let search_result = self
       .provider
-      .get_latest_quotes(ticker, "1d")
+      .search_ticker(term)
       .await
       .map_err(|e| format!("{}", e))?;
-    let quote: Quote = response.last_quote().map_err(|e| format!("{}", e))?.into();
-    Ok(quote)
+
+    let tickers: Vec<Ticker> = search_result.quotes.iter().map(Ticker::from).collect();
+
+    Ok(tickers)
   }
 }

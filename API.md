@@ -1,3 +1,5 @@
+# Endpoint API
+
 - GET `/quotes/{tickers}/{period}`
 
 ```JSON
@@ -47,4 +49,20 @@
         ]
     }
   }
+```
+
+- GET `/search?term={term}`
+
+```JSON
+[
+    {
+        "exchange": "NMS",
+        "short_name": "Tesla, Inc.",
+        "quote_type": "EQUITY",
+        "symbol": "TSLA",
+        "index": "quotes",
+        "score": 4296619.0,
+        "type_display": "Equity",
+        "long_name": "Tesla, Inc."
+    }, ...
 ```
