@@ -34,10 +34,4 @@ where
   }
 }
 
-// impl From<yahoo::YahooError> for ApiError {
-//   fn from(ye: yahoo::YahooError) -> ApiError {
-//     ApiError::from(format!("{}", ye))
-//   }
-// }
-
 impl ResponseError for ApiError {}

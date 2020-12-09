@@ -33,7 +33,8 @@ impl Api {
     let response = self
       .provider
       .get_quote_range(&ticker, &granularity, &interval)
-      .await?;
+      .await
+      .map_err(|e| format!("{}", e))?;
 
     Ok(response.into())
   }
@@ -54,8 +55,12 @@ impl Api {
   }
 
   pub async fn latest(&self, ticker: &str) -> Result<Quote, ApiError> {
-    let response = self.provider.get_latest_quotes(ticker, "1d").await?;
-    let quote: Quote = response.last_quote()?.into();
+    let response = self
+      .provider
+      .get_latest_quotes(ticker, "1d")
+      .await
+      .map_err(|e| format!("{}", e))?;
+    let quote: Quote = response.last_quote().map_err(|e| format!("{}", e))?.into();
     Ok(quote)
   }
 }
