@@ -1,6 +1,7 @@
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
 use std::time::{Duration, UNIX_EPOCH};
+use yahoo_finance_api as yahoo;
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
 pub struct Quote {
@@ -13,8 +14,8 @@ pub struct Quote {
   pub adjclose: f64,
 }
 
-impl From<yahoo_finance_api::Quote> for Quote {
-  fn from(q: yahoo_finance_api::Quote) -> Quote {
+impl From<yahoo::Quote> for Quote {
+  fn from(q: yahoo::Quote) -> Quote {
     let timestamp: DateTime<Utc> = DateTime::from(UNIX_EPOCH + Duration::from_secs(q.timestamp));
     Quote {
       timestamp: timestamp.to_rfc3339(),
@@ -49,8 +50,8 @@ pub struct Meta {
   pub valid_ranges: Vec<String>,
 }
 
-impl From<&yahoo_finance_api::YMetaData> for Meta {
-  fn from(m: &yahoo_finance_api::YMetaData) -> Meta {
+impl From<&yahoo::YMetaData> for Meta {
+  fn from(m: &yahoo::YMetaData) -> Meta {
     Meta {
       scale: m.scale,
       gmtoffset: m.gmtoffset,
@@ -79,8 +80,8 @@ pub struct TickerQuotes {
   quotes: Vec<Quote>,
 }
 
-impl From<yahoo_finance_api::YResponse> for TickerQuotes {
-  fn from(r: yahoo_finance_api::YResponse) -> TickerQuotes {
+impl From<yahoo::YResponse> for TickerQuotes {
+  fn from(r: yahoo::YResponse) -> TickerQuotes {
     let quotes = r
       .quotes()
       .unwrap_or_default()

@@ -41,6 +41,7 @@ async fn main() -> std::io::Result<()> {
             "/quotes/{tickers}/{period}",
             web::get().to(handlers::tickers),
           )
+          .route("/search", web::get().to(handlers::search))
           .route("/about", web::get().to(handlers::about)),
       )
   })

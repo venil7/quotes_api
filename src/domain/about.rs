@@ -1,4 +1,3 @@
-use hostname;
 use serde::{Deserialize, Serialize};
 use std::ffi::OsString;
 
@@ -12,7 +11,7 @@ pub struct About {
 impl Default for About {
   fn default() -> About {
     let host = hostname::get()
-      .unwrap_or(OsString::from("unknown"))
+      .unwrap_or_else(|_| OsString::from("unknown"))
       .to_str()
       .unwrap()
       .to_owned();
