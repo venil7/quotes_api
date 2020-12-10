@@ -5,7 +5,7 @@ use actix_web::Error;
 use actix_web_httpauth::extractors::basic::BasicAuth;
 use actix_web_httpauth::extractors::bearer::BearerAuth;
 
-pub async fn basic_validator(
+pub async fn _basic_validator(
   req: ServiceRequest,
   _credentials: BasicAuth,
 ) -> Result<ServiceRequest, Error> {
@@ -18,10 +18,10 @@ pub async fn bearer_validator(
 ) -> Result<ServiceRequest, Error> {
   if let Some(auth_api) = req.app_data::<AuthApi>() {
     match auth_api.validate_token(credentials.token()) {
-      true => Ok(req),
-      _ => Err(Error::from(ApiError::default())),
+      Ok(_claims) => Ok(req),
+      Err(err) => Err(Error::from(ApiError::from(format!("{}", err)))),
     }
   } else {
-    Err(Error::from(ApiError::default()))
+    Err(Error::from(ApiError::from("Auth api not available")))
   }
 }

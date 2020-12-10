@@ -34,15 +34,19 @@ async fn main() -> std::io::Result<()> {
       .app_data(AuthApi::default())
       .data(Api::default())
       .wrap(middleware::Logger::default())
-      .wrap(auth)
       .service(
-        web::scope("/api/v1")
-          .route(
-            "/quotes/{tickers}/{period}",
-            web::get().to(handlers::tickers),
-          )
-          .route("/search", web::get().to(handlers::search))
-          .route("/about", web::get().to(handlers::about)),
+        web::scope("/api")
+          .route("/login", web::post().to(handlers::login))
+          .route("/about", web::get().to(handlers::about))
+          .service(
+            web::scope("/v1")
+              .wrap(auth)
+              .route(
+                "/quotes/{tickers}/{period}",
+                web::get().to(handlers::tickers),
+              )
+              .route("/search", web::get().to(handlers::search)),
+          ),
       )
   })
   .bind(bind_address)?
