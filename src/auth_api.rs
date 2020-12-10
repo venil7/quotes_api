@@ -34,9 +34,9 @@ impl AuthApi {
   }
 }
 
-impl Default for AuthApi {
-  fn default() -> Self {
-    let key = HS256Key::generate();
+impl AuthApi {
+  pub fn from(str: &str) -> Self {
+    let key = HS256Key::from_bytes(&str.as_bytes());
     AuthApi { key }
   }
 }

@@ -21,6 +21,7 @@ async fn main() -> std::io::Result<()> {
     .unwrap();
 
   let bind_address = format!("{}:{}", cli.host, cli.port);
+  let jwt_key = cli.jwt_key.clone();
 
   log::info!(
     "{} {} listening on {}",
@@ -28,10 +29,10 @@ async fn main() -> std::io::Result<()> {
     env!("CARGO_PKG_VERSION"),
     bind_address
   );
-  HttpServer::new(|| {
+  HttpServer::new(move || {
     let auth = HttpAuthentication::bearer(bearer_validator);
     App::new()
-      .app_data(AuthApi::default())
+      .app_data(AuthApi::from(&jwt_key))
       .data(Api::default())
       .wrap(middleware::Logger::default())
       .service(
