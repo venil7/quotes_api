@@ -7,7 +7,7 @@
 ## Todo
 
 - [ ] User management
-- [ ] Authentication with JWT
+- [x] Authentication with JWT
 - [ ] Redis caching layer
 - [x] CI/CD pipeline
 - [x] Docker image on hub
@@ -20,8 +20,9 @@ $ docker run \
   -p 8088:8088 \
   -e HOST=127.0.0.1 \
   -e PORT=8088 \
-  quotes_api:latest \
-  server --host $HOST --port $PORT
+  -e LOGLEVEL=info \
+  -e JWTKEY=$SECRET
+  quotes_api:latest
 ```
 
 ### Docker compose
@@ -36,8 +37,9 @@ services:
     ports:
       - "8088:8088/tcp"
     environment:
-      HOST: "127.0.0.1"
+      HOST: "0.0.0.0"
       PORT: "8088"
+      JWTKEY: "S3cret"
       LOGLEVEL: "info"
     restart: unless-stopped
 ```

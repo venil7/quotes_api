@@ -1,5 +1,28 @@
 # Endpoint API
 
+## `/api`
+
+- POST `/login`
+
+### requset
+
+```JSON
+{
+    "email": "abc@def.xy",
+    "password": "P@ssword!"
+}
+```
+
+### response
+
+```JSON
+{
+    "token": "some.toke.here",
+}
+```
+
+## `/api/v1`
+
 - GET `/quotes/{tickers}/{period}`
 
 ```JSON

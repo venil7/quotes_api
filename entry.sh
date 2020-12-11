@@ -2,5 +2,5 @@
 server \
  --host $HOST \
  --port $PORT \
- --loglevel $LOG \
- --jwt-key $JWT_KEY
+ --loglevel $LOGLEVEL \
+ --jwt-key $JWTKEY
