@@ -48,6 +48,8 @@ pub struct Meta {
   pub data_granularity: String,
   pub range: String,
   pub valid_ranges: Vec<String>,
+  pub diff: f64,
+  pub diff_percentage: f64,
 }
 
 impl From<&yahoo::YMetaData> for Meta {
@@ -70,6 +72,8 @@ impl From<&yahoo::YMetaData> for Meta {
       instrument_type: m.instrument_type.to_owned(),
       data_granularity: m.data_granularity.to_owned(),
       exchange_timezone_name: m.exchange_timezone_name.to_owned(),
+      diff: calculate_diff(m.chart_previous_close, m.regular_market_price),
+      diff_percentage: calculate_diff_percetage(m.chart_previous_close, m.regular_market_price),
     }
   }
 }
@@ -91,5 +95,40 @@ impl From<yahoo::YResponse> for TickerQuotes {
     let yquote = r.chart.result.first().unwrap();
     let meta = Meta::from(&yquote.meta);
     TickerQuotes { meta, quotes }
+  }
+}
+
+fn calculate_diff(prev: f64, current: f64) -> f64 {
+  current - prev
+}
+
+fn calculate_diff_percetage(prev: f64, current: f64) -> f64 {
+  let perc = prev / 100.0;
+  (current - prev) / perc
+}
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_calculate_diff_positive1() {
+    let res = calculate_diff(120., 100.);
+    assert_eq!(res, -20.);
+  }
+  #[test]
+  fn test_calculate_diff_negative1() {
+    let res = calculate_diff(100., 120.);
+    assert_eq!(res, 20.);
+  }
+  #[test]
+  fn calculate_diff_percetage_positive1() {
+    let res = calculate_diff_percetage(100., 120.);
+    assert_eq!(res, 20.);
+  }
+  #[test]
+  fn calculate_diff_percetage_negative1() {
+    let res = calculate_diff_percetage(120., 100.);
+    assert_eq!(res, -16.666666666666668);
   }
 }
