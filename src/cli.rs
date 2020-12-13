@@ -11,4 +11,6 @@ pub struct Cli {
 
   #[structopt(name = "loglevel", long = "--loglevel", default_value = "info")]
   pub log_level: String,
+  #[structopt(name = "JWT key", long = "--jwt-key", default_value = "")]
+  pub jwt_key: String,
 }

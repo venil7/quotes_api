@@ -34,7 +34,7 @@ impl Api {
       .provider
       .get_quote_range(&ticker, &granularity, &interval)
       .await
-      .map_err(|e| format!("{}", e))?;
+      .map_err(|e| format!("get_quote_range {}", e))?;
 
     Ok(response.into())
   }
@@ -59,7 +59,7 @@ impl Api {
       .provider
       .search_ticker(term)
       .await
-      .map_err(|e| format!("{}", e))?;
+      .map_err(|e| format!("search_ticker {}", e))?;
 
     let tickers: Vec<Ticker> = search_result.quotes.iter().map(Ticker::from).collect();
 

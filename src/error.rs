@@ -10,14 +10,14 @@ pub struct ApiError {
 impl Default for ApiError {
   fn default() -> Self {
     ApiError {
-      message: String::from(""),
+      message: String::from("generic api error"),
     }
   }
 }
 
 impl Display for ApiError {
   fn fmt(&self, f: &mut Formatter<'_>) -> Result {
-    write!(f, "({})", self.message)
+    write!(f, "{}", self.message)
   }
 }
 

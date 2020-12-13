@@ -1,7 +1,10 @@
 use crate::api::Api;
+use crate::auth_api::ApiClaims;
+use crate::auth_api::AuthApi;
 use crate::domain::about::About;
+use crate::domain::login::{Login, LoginToken};
 use crate::domain::period::Period;
-use actix_web::{web, HttpResponse, Result};
+use actix_web::{web, HttpRequest, HttpResponse, Result};
 use serde::Deserialize;
 use std::convert::TryFrom;
 
@@ -27,4 +30,18 @@ pub async fn search(api: web::Data<Api>, search: web::Query<TickerSearch>) -> Re
 pub async fn about() -> Result<HttpResponse> {
   let about = About::default();
   Ok(HttpResponse::Ok().json(about))
+}
+
+pub async fn login(req: HttpRequest, credential: web::Json<Login>) -> Result<HttpResponse> {
+  if let Some(auth_api) = req.app_data::<AuthApi>() {
+    let claims = ApiClaims {
+      email: credential.email.clone(),
+      write: false,
+    };
+    let token = auth_api.create_token(&claims)?;
+    let login_token = LoginToken { token };
+    return Ok(HttpResponse::Ok().json(login_token));
+  }
+
+  Ok(HttpResponse::BadRequest().body("Bad data"))
 }

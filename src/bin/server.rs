@@ -21,6 +21,7 @@ async fn main() -> std::io::Result<()> {
     .unwrap();
 
   let bind_address = format!("{}:{}", cli.host, cli.port);
+  let jwt_key = cli.jwt_key.clone();
 
   log::info!(
     "{} {} listening on {}",
@@ -28,21 +29,25 @@ async fn main() -> std::io::Result<()> {
     env!("CARGO_PKG_VERSION"),
     bind_address
   );
-  HttpServer::new(|| {
+  HttpServer::new(move || {
     let auth = HttpAuthentication::bearer(bearer_validator);
     App::new()
-      .app_data(AuthApi::default())
+      .app_data(AuthApi::from(&jwt_key))
       .data(Api::default())
       .wrap(middleware::Logger::default())
-      .wrap(auth)
       .service(
-        web::scope("/api/v1")
-          .route(
-            "/quotes/{tickers}/{period}",
-            web::get().to(handlers::tickers),
-          )
-          .route("/search", web::get().to(handlers::search))
-          .route("/about", web::get().to(handlers::about)),
+        web::scope("/api")
+          .route("/login", web::post().to(handlers::login))
+          .route("/about", web::get().to(handlers::about))
+          .service(
+            web::scope("/v1")
+              .wrap(auth)
+              .route(
+                "/quotes/{tickers}/{period}",
+                web::get().to(handlers::tickers),
+              )
+              .route("/search", web::get().to(handlers::search)),
+          ),
       )
   })
   .bind(bind_address)?
