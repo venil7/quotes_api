@@ -23,8 +23,8 @@ pub async fn tickers(
 }
 
 pub async fn search(api: web::Data<Api>, search: web::Query<TickerSearch>) -> Result<HttpResponse> {
-  let tickers = api.search(&search.ticker).await?;
-  Ok(HttpResponse::Ok().json(tickers))
+  let search_result = api.search(&search.ticker).await?;
+  Ok(HttpResponse::Ok().json(search_result))
 }
 
 pub async fn about() -> Result<HttpResponse> {
