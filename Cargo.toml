@@ -1,6 +1,6 @@
 [package]
 edition = "2018"
-version = "0.0.5"
+version = "0.0.6"
 name = "quote_api"
 authors = ["@darkest_ruby"]
 description = "HTTP API to fetch crypto/shares quotes (uses Y! finance)" 
@@ -16,7 +16,7 @@ structopt = "0.3"
 jwt-simple = "0.2"
 simple_logger = "~1.11"
 actix-web-httpauth="0.5"
-yahoo_finance_api = "1.1"
+yahoo_finance_api = "^1.1.4"
 serde = { version="1.0.117", features = ["derive"] } 
 
 [[bin]]

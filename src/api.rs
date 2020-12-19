@@ -1,5 +1,7 @@
 use crate::domain::period::Period;
+use crate::domain::quote::QuotesResult;
 use crate::domain::quote::TickerQuotes;
+use crate::domain::search_result::SearchResult;
 use crate::domain::ticker::Ticker;
 use crate::error::ApiError;
 use std::collections::HashMap;
@@ -43,18 +45,18 @@ impl Api {
     &self,
     tickers: &str,
     period: Period,
-  ) -> Result<HashMap<String, TickerQuotes>, ApiError> {
+  ) -> Result<QuotesResult, ApiError> {
     let tickers = tickers.split(',').collect::<Vec<_>>();
-    let mut map = HashMap::new();
+    let mut quotes = HashMap::new();
     for ticker in tickers {
       let ticker_quotes = self.quotes_for_range(ticker, period).await?;
-      map.insert(ticker.to_owned(), ticker_quotes);
+      quotes.insert(ticker.to_owned(), ticker_quotes);
     }
 
-    return Ok(map);
+    return Ok(QuotesResult::new(quotes));
   }
 
-  pub async fn search(&self, term: &str) -> Result<Vec<Ticker>, ApiError> {
+  pub async fn search(&self, term: &str) -> Result<SearchResult, ApiError> {
     let search_result = self
       .provider
       .search_ticker(term)
@@ -63,6 +65,6 @@ impl Api {
 
     let tickers: Vec<Ticker> = search_result.quotes.iter().map(Ticker::from).collect();
 
-    Ok(tickers)
+    Ok(SearchResult::new(tickers))
   }
 }

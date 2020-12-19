@@ -1,5 +1,6 @@
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::time::{Duration, UNIX_EPOCH};
 use yahoo_finance_api as yahoo;
 
@@ -105,6 +106,17 @@ fn calculate_diff(prev: f64, current: f64) -> f64 {
 fn calculate_diff_percetage(prev: f64, current: f64) -> f64 {
   let perc = prev / 100.0;
   (current - prev) / perc
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct QuotesResult {
+  pub quotes: HashMap<String, TickerQuotes>,
+}
+
+impl QuotesResult {
+  pub fn new(quotes: HashMap<String, TickerQuotes>) -> QuotesResult {
+    QuotesResult { quotes }
+  }
 }
 
 #[cfg(test)]

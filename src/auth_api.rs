@@ -24,7 +24,7 @@ impl AuthApi {
   }
 
   pub fn create_token(&self, claims: &ApiClaims) -> Result<String, ApiError> {
-    let jwt_claims = Claims::with_custom_claims(claims.clone(), Duration::from_hours(2));
+    let jwt_claims = Claims::with_custom_claims(claims.clone(), Duration::from_days(2));
     let token = self
       .key
       .authenticate(jwt_claims)
