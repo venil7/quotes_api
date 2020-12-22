@@ -1,12 +1,11 @@
 [package]
 edition = "2018"
-version = "0.0.6"
+version = "0.0.7"
 name = "quote_api"
 authors = ["@darkest_ruby"]
 description = "HTTP API to fetch crypto/shares quotes (uses Y! finance)" 
 
 [dependencies]
-regex = "1"
 log = "0.4"
 actix-web = "3"
 chrono = "0.4.19"
