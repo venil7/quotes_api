@@ -1688,7 +1688,7 @@ dependencies = [
 
 [[package]]
 name = "quote_api"
-version = "0.0.6"
+version = "0.0.7"
 dependencies = [
  "actix-web",
  "actix-web-httpauth",
@@ -1696,7 +1696,6 @@ dependencies = [
  "hostname",
  "jwt-simple",
  "log",
- "regex",
  "serde",
  "serde_json",
  "simple_logger",
