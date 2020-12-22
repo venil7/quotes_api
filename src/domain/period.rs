@@ -1,63 +1,68 @@
 use crate::error::ApiError;
-use regex::Regex;
-use std::num::ParseIntError;
 
 #[derive(Copy, Clone, PartialEq, Eq, Debug)]
 pub enum Period {
-  Minute(u8),
-  Hour(u8),
-  Day(u8),
-  Month(u8),
-  Year(u8),
+  Days1,
+  Days5,
+  Months1,
+  Months3,
+  Months6,
+  Years1,
+  Years2,
+  Years5,
+  Year10,
+  Ytd,
+  Max,
   Unknown,
 }
 
 impl Period {
   pub fn to_yahoo_range(&self) -> Result<String, ApiError> {
     match self {
-      Period::Minute(num_hours) => Ok(format!("{}m", num_hours)),
-      Period::Hour(num_hours) => Ok(format!("{}ho", num_hours)),
-      Period::Day(num_days) => Ok(format!("{}d", num_days)),
-      Period::Month(num_months) => Ok(format!("{}mo", num_months)),
-      Period::Year(num_years) => Ok(format!("{}y", num_years)),
-      _ => Err(ApiError::default()),
+      Period::Days1 => Ok("1d".into()),
+      Period::Days5 => Ok("5d".into()),
+      Period::Months1 => Ok("1mo".into()),
+      Period::Months3 => Ok("3mo".into()),
+      Period::Months6 => Ok("6mo".into()),
+      Period::Years1 => Ok("1y".into()),
+      Period::Years2 => Ok("2y".into()),
+      Period::Years5 => Ok("5y".into()),
+      Period::Year10 => Ok("10y".into()),
+      Period::Ytd => Ok("ytd".into()),
+      Period::Max => Ok("max".into()),
+      _ => Err(ApiError::from("could not convert to yahoo_range")),
     }
   }
 
   pub fn to_matching_yahoo_granularity(&self) -> Result<String, ApiError> {
     match self {
-      Period::Minute(_num_minutes) => Period::Minute(1).to_yahoo_range(),
-      Period::Hour(_num_hours) => Period::Minute(1).to_yahoo_range(),
-      Period::Day(_num_days) => Period::Minute(15).to_yahoo_range(),
-      Period::Month(_num_months) => Period::Day(1).to_yahoo_range(),
-      Period::Year(_num_years) => Period::Day(1).to_yahoo_range(),
-      _ => Err(ApiError::default()),
+      Period::Days1 => Ok("1m".into()),
+      Period::Days5 => Ok("15m".into()),
+      Period::Months1 | Period::Months3 | Period::Months6 => Ok("1d".into()),
+      Period::Years1 | Period::Years2 | Period::Years5 => Ok("1d".into()),
+      Period::Year10 => Ok("1mo".into()),
+      Period::Ytd => Ok("1d".into()),
+      Period::Max => Ok("1d".into()),
+      _ => Err(ApiError::from("could not convert to yahoo_granularity")),
     }
   }
 }
 
 impl From<String> for Period {
   fn from(s: String) -> Period {
-    let re = Regex::new(r"^(\d)([A-z]{1,2})$").unwrap();
-    match re.captures(&s) {
-      Some(m) => {
-        let digit_part: Result<u8, ParseIntError> = m[1].to_owned().parse();
-        match digit_part {
-          Ok(digit) if digit > 0 => {
-            let alpha_part = m[2].to_owned();
-            match &alpha_part[..] {
-              "m" => Period::Minute(digit),
-              "h" => Period::Hour(digit),
-              "d" => Period::Day(digit),
-              "M" => Period::Month(digit),
-              "y" => Period::Year(digit),
-              _ => Period::Unknown,
-            }
-          }
-          _ => Period::Unknown,
-        }
-      }
-      None => Period::Unknown,
+    match s.as_str() {
+      "1d" => Period::Days1,
+      "5d" => Period::Days5,
+      "1mo" => Period::Months1,
+      "3mo" => Period::Months3,
+      "6mo" => Period::Months6,
+      "1y" => Period::Years1,
+      "2y" => Period::Years2,
+      "5y" => Period::Years5,
+      "10y" => Period::Year10,
+      "ytd" => Period::Ytd,
+      "max" => Period::Max,
+      _ => Period::Unknown,
     }
   }
 }
@@ -67,30 +72,23 @@ mod tests {
   use super::*;
 
   #[test]
-  fn period_from_string_minute() {
-    let str1 = String::from("6m");
-    let per1 = Period::from(str1);
-    assert_eq!(per1, Period::Minute(6));
-  }
-
-  #[test]
   fn period_from_string_day() {
     let str1 = String::from("1d");
     let per1 = Period::from(str1);
-    assert_eq!(per1, Period::Day(1));
+    assert_eq!(per1, Period::Days1);
   }
 
   #[test]
   fn period_from_string_month() {
-    let str1 = String::from("6M");
+    let str1 = String::from("6mo");
     let per1 = Period::from(str1);
-    assert_eq!(per1, Period::Month(6));
+    assert_eq!(per1, Period::Months6);
   }
   #[test]
   fn period_from_string_year() {
     let str1 = String::from("1y");
     let per1 = Period::from(str1);
-    assert_eq!(per1, Period::Year(1));
+    assert_eq!(per1, Period::Years1);
   }
 
   #[test]
