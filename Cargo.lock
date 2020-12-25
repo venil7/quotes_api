@@ -1688,7 +1688,7 @@ dependencies = [
 
 [[package]]
 name = "quote_api"
-version = "0.0.7"
+version = "0.0.8"
 dependencies = [
  "actix-web",
  "actix-web-httpauth",

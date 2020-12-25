@@ -1,6 +1,6 @@
 [package]
 edition = "2018"
-version = "0.0.7"
+version = "0.0.8"
 name = "quote_api"
 authors = ["@darkest_ruby"]
 description = "HTTP API to fetch crypto/shares quotes (uses Y! finance)" 
