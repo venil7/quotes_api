@@ -81,8 +81,8 @@ impl From<&yahoo::YMetaData> for Meta {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct TickerQuotes {
-  meta: Meta,
-  quotes: Vec<Quote>,
+  pub meta: Meta,
+  pub quotes: Vec<Quote>,
 }
 
 impl From<yahoo::YResponse> for TickerQuotes {

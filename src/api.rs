@@ -48,9 +48,16 @@ impl Api {
   ) -> Result<QuotesResult, ApiError> {
     let tickers = tickers.split(',').collect::<Vec<_>>();
     let mut quotes = HashMap::new();
-    for ticker in tickers {
-      let ticker_quotes = self.quotes_for_range(ticker, period).await?;
-      quotes.insert(ticker.to_owned(), ticker_quotes);
+    let handles = tickers.iter().map(|s| self.quotes_for_range(s, period));
+    let results: Vec<Result<_, _>> = futures::future::join_all(handles).await;
+
+    for result in results {
+      match result {
+        Ok(quote) => {
+          quotes.insert(quote.meta.symbol.clone(), quote);
+        }
+        _ => { /* Errored quote doesn't make it to resulting JSON */ }
+      }
     }
 
     return Ok(QuotesResult::new(quotes));
