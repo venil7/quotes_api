@@ -1,10 +1,10 @@
 use actix_web::{middleware, web, App, HttpServer};
 use log::LevelFilter;
-use quote_api::api::Api;
-use quote_api::auth::bearer_validator;
-use quote_api::auth_api::AuthApi;
-use quote_api::cli;
-use quote_api::handlers;
+use quotes_api::api::Api;
+use quotes_api::auth::bearer_validator;
+use quotes_api::auth_api::AuthApi;
+use quotes_api::cli;
+use quotes_api::handlers;
 use simple_logger::SimpleLogger;
 use std::str::FromStr;
 use structopt::StructOpt;
