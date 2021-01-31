@@ -1,6 +1,6 @@
+use crate::database;
 use crate::domain::period::Period;
-use crate::domain::quote::QuotesResult;
-use crate::domain::quote::TickerQuotes;
+use crate::domain::quote::{QuotesResult, TickerQuotes};
 use crate::domain::search_result::SearchResult;
 use crate::domain::ticker::Ticker;
 use crate::error::ApiError;
@@ -9,12 +9,14 @@ use yahoo_finance_api as yahoo;
 
 pub struct Api {
   provider: yahoo::YahooConnector,
+  database: database::Database,
 }
 
-impl Default for Api {
-  fn default() -> Self {
+impl Api {
+  pub fn try_new(database_url: &str) -> Result<Self, ApiError> {
     let provider = yahoo::YahooConnector::new();
-    Api { provider }
+    let database = database::Database::try_new(database_url)?;
+    Ok(Api { provider, database })
   }
 }
 

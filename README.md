@@ -21,7 +21,8 @@ $ docker run \
   -e HOST=127.0.0.1 \
   -e PORT=8088 \
   -e LOGLEVEL=info \
-  -e JWTKEY=$SECRET
+  -e JWTKEY=$SECRET \
+  -e DATABASE_URL=$DATABASE_URL \
   quotes_api:latest
 ```
 

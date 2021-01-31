@@ -3,4 +3,5 @@ server \
  --host $HOST \
  --port $PORT \
  --loglevel $LOGLEVEL \
- --jwt-key $JWTKEY
+ --jwt-key $JWTKEY \
+ --db-url $DATABASE_URL
